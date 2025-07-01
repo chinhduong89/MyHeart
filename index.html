@@ -267,29 +267,36 @@ function ParticlePool(length) {
     }
 
     function drawText(context) {
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const chars = displayText.split('');
-        const totalWidth = chars.length * 40;
-        let startX = centerX - totalWidth / 2 + 20;
+		const centerX = canvas.width / 2;
+		const centerY = canvas.height / 2 - 50; // Đẩy lên trái tim
 
-        chars.forEach((ch, i) => {
-            const color = `hsl(${(hueText + i * 50) % 360}, 100%, 65%)`;
-            context.fillStyle = color;
-            context.font = `bold 48px monospace`;
+		const chars = displayText.split('');
+		const fontSize = 36; // Cho nhỏ lại vừa với tim
+		const spacing = fontSize; // Khoảng cách giữa ký tự
 
-            if (currentText === 2) {
-                // Hiệu ứng rung nhỏ
-                const offsetX = Math.random() * 2 - 1;
-                const offsetY = Math.random() * 2 - 1;
-                context.fillText(ch, startX + offsetX, centerY + offsetY);
-            } else {
-                context.fillText(ch, startX, centerY);
-            }
+		const totalWidth = chars.length * spacing;
+		let startX = centerX - totalWidth / 2 + spacing / 2;
 
-            startX += 40;
-        });
-    }
+		const timeFactor = Math.sin(time * 3) * 0.05 + 1; // Nhịp tim phóng to nhỏ
+
+		chars.forEach((ch, i) => {
+			const hue = (hueText + i * 50) % 360;
+			context.save();
+			context.translate(centerX, centerY);
+			context.scale(timeFactor, timeFactor);
+			context.translate(-centerX, -centerY);
+
+			context.font = `bold ${fontSize}px monospace`;
+			context.fillStyle = `hsl(${hue}, 100%, 70%)`;
+			context.shadowColor = `hsl(${hue}, 100%, 70%)`;
+			context.shadowBlur = 15;
+
+			context.fillText(ch, startX, centerY);
+
+			context.restore();
+			startX += spacing;
+		});
+	}
 
     setTimeout(() => {
         currentText = 1;
@@ -351,7 +358,7 @@ function ParticlePool(length) {
         const centerX = Math.random() * canvas.width;
         const centerY = Math.random() * canvas.height / 2;
 
-        const particlesCount = 150 + Math.random() * 150; // Tăng số hạt mỗi lần nổ
+        const particlesCount = 120 + Math.random() * 120; // Tăng số hạt mỗi lần nổ
 
         for (let i = 0; i < particlesCount; i++) {
             const angle = Math.random() * Math.PI * 2;
@@ -384,7 +391,7 @@ function ParticlePool(length) {
     function drawFireworks() {
         fireworks.forEach(p => {
             ctx.save();
-            ctx.globalAlpha = Math.max(p.life / 150, 0.1);
+            ctx.globalAlpha = Math.max(p.life / 120, 0.1);
             ctx.fillStyle = p.color;
             ctx.shadowColor = p.color;
             ctx.shadowBlur = 20; // Glow mạnh
