@@ -271,8 +271,12 @@ function ParticlePool(length) {
 		const centerY = canvas.height / 2 - 50; // Đẩy lên trái tim
 
 		const chars = displayText.split('');
-		const fontSize = 36; // Cho nhỏ lại vừa với tim
-		const spacing = fontSize; // Khoảng cách giữa ký tự
+		let fontSize = 36;
+		const maxWidth = 300;
+		if (chars.length * fontSize > maxWidth) {
+			fontSize = maxWidth / chars.length;
+		}
+		const spacing = fontSize;
 
 		const totalWidth = chars.length * spacing;
 		let startX = centerX - totalWidth / 2 + spacing / 2;
@@ -355,26 +359,26 @@ function ParticlePool(length) {
     let fireworkInterval = null;
 
     function createFirework() {
-        const centerX = Math.random() * canvas.width;
-        const centerY = Math.random() * canvas.height / 2;
+		const centerX = Math.random() * canvas.width;
+		const centerY = Math.random() * canvas.height / 2;
 
-        const particlesCount = 120 + Math.random() * 120; // Tăng số hạt mỗi lần nổ
+		const particlesCount = 60 + Math.random() * 40; // Chỉ còn 60~100 hạt mỗi lần nổ
 
-        for (let i = 0; i < particlesCount; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 6 + 4; // Tốc độ lớn hơn
+		for (let i = 0; i < particlesCount; i++) {
+			const angle = Math.random() * Math.PI * 2;
+			const speed = Math.random() * 5 + 2; // Tốc độ nhẹ hơn chút
 
-            fireworks.push({
-                x: centerX,
-                y: centerY,
-                dx: Math.cos(angle) * speed,
-                dy: Math.sin(angle) * speed,
-                life: 120 + Math.random() * 50,
-                color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-                size: 2 + Math.random() * 2 // Kích thước to hơn
-            });
-        }
-    }
+			fireworks.push({
+				x: centerX,
+				y: centerY,
+				dx: Math.cos(angle) * speed,
+				dy: Math.sin(angle) * speed,
+				life: 100 + Math.random() * 30,
+				color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+				size: 2 + Math.random() * 2
+			});
+		}
+	}
 
     function updateFireworks() {
         fireworks.forEach(p => {
@@ -407,7 +411,7 @@ function ParticlePool(length) {
             for (let i = 0; i < 3; i++) { // Bắn 3 phát mỗi lần
                 createFirework();
             }
-        }, 400); // Mỗi 0.4 giây bắn
+        }, 600); // Mỗi 0.4 giây bắn
     }
 
     function stopFireworks() {
